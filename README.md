@@ -36,5 +36,5 @@
   ``` shell 
   {% block content %} xxxx  {% endblock %} 
   ``` 
-    Le contenu sera placé sur la home page dans la balise du même nom graçe à l'extends.
+    Le contenu sera placé sur la home page dans la balise du même  nom grace à l'extends.
       
