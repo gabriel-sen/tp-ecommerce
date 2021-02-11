@@ -23,4 +23,4 @@
       symfony console make:controller
       ```
   Dedans je modifie sa route ```/home ``` pour ```/ ``` ainsi, symfony l'utilisera en guise de hompage.
- - Dans le repo template > home, le fichier index.html.twig j'ai gardé que l'extends de la base.html.twig pour qu'il prenne les assets du projet.
+ - Dans le repo ```shell template > home ``` le fichier ```index.html.twig``` j'ai gardé que l'extends de la base.html.twig pour qu'il prenne les assets du projet.
