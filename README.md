@@ -83,6 +83,26 @@ updated: config/packages/security.yaml
 - ``` src/Repository/UserRepository.php ``` Contient tout ce qui touche à la récupération des données de l'entité user(). 
 - ``` config/packages/security.yaml ``` Contient entités ainsi que leurs règles. User, Admin, Public...
 
+####Création de la BDD
+- S'assurer que le sever MySQL est en fonctionnement dans la version 5.7 minimum
+- S'assurer que ``` extension=pdo_mysql ``` dans le fichier php.ini de la version référant de nos variables d'environement system + de notre WAMP soit bien décommenté.
+- Se rendre dans le fichier ``` .env ``` et modifier les deux dernières lignes. 
+    ```shell 
+    # DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7"
+    DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
+  ```
+  * ``` DATABASE_URL ="mysql:// ```  l'ID du user ``` : ``` mot de passe  ``` @ip du server: ``` port (vérifier sur phpMyadmin) ``` / ``` nom du server ``` ? ``` version du server.
+  * #####On commente la ligne suivante
+  ```shell 
+    DATABASE_URL="mysql://root:@127.0.0.1:3306/ecommerce?serverVersion=5.7"
+    #DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
+  ```
+- Pour créer la BDD on utilise la commande 
+    ``` shell 
+    symfony console doctrine:database:create
+    ``` 
+
+
 ### 2.2 : Création d'un formulaire d'inscription
 
 ### 2.3 : Création d'un formulaire de connection
