@@ -101,7 +101,23 @@ updated: config/packages/security.yaml
     ``` shell 
     symfony console doctrine:database:create
     ``` 
-
+- Dans PHPStorm nous avons accès à une vue BDD On s'affranchis ainsi de MySQL Workbench ou de PHPMyAdmin
+    - dans l'onglet database à droite on clique sur +
+    - Data source > MySQL
+    - Une frois tout les champs renseigné, on Test
+    - ERROR
+    - On sélectionne la TimeZone on apply et OK.
+  
+###Création de la table User
+- Nous allons utiliser doctrine pour faire une migration. Une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
+``` shell 
+symfony console make:migration
+``` 
+- Il faut run la migration pour l'appliquer
+``` shell 
+ php bin/console doctrine:migrations:migrate
+``` 
+- La table User est crééer avec la structure attendu dans l'entité User.php. C'est à dire ;  id, email, role, password 
 
 ### 2.2 : Création d'un formulaire d'inscription
 
