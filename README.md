@@ -109,18 +109,92 @@ updated: config/packages/security.yaml
     - On sélectionne la TimeZone on apply et OK.
   
 ###Création de la table User
-- Nous allons utiliser doctrine pour faire une migration. Une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
-``` shell 
-symfony console make:migration
-``` 
-- Il faut run la migration pour l'appliquer
-``` shell 
- php bin/console doctrine:migrations:migrate
-``` 
-- La table User est crééer avec la structure attendu dans l'entité User.php. C'est à dire ;  id, email, role, password 
+  - Nous allons utiliser doctrine pour faire une migration. Une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
+  ``` shell 
+  symfony console make:migration
+  ``` 
+  - Il faut run la migration pour l'appliquer
+  ``` shell 
+   php bin/console doctrine:migrations:migrate
+  ``` 
+  - La table User est crééer avec la structure attendu dans l'entité User.php. C'est à dire ;  id, email, role, password 
 
 ### 2.2 : Création d'un formulaire d'inscription
+  - je commence par créer le contoller nommé ```RegisterController```
+  ``` shell 
+   symfony console make:controller
+  ``` 
+  - Je renome sa route pour ``` @Route("/inscription", name="register") ```
+  - Dans le fichier ``` template > register > index.html.twig  ``` je créer mon block content. Avec mon contenu HTML dedans. 
+  - Dans le fichier ``` base.html.twig```  je place le carousel sous une confition ``` if``` ainsi le carousel sera affiché uniquement si un ``` {% block carousel %}```  est définie dans la vue.
+    ``` shell 
+    {% if block('carousel') is defined %}
+    ...contenu HTML du carousel...
+    {% endif %}
+    ```
+  - Dans le fichier ```base.html.twig``` , On va ajouter une marge superieur à la section content UNIQUEMENT si le carousel n'est pas définie. On va passer une condition ```{% if block('carousel') is not defined %}``` dans la classe de son parent pour appliquer la class bootstraop ```mt-5``` Magrin top 5.
+    ``` shell 
+      <div class="container marketing {% if block('carousel') is not defined %}mt-5{% endif %}">
+    ``` 
+  - Dans le fichier  ``` template > register > index.html.twig  ``` je créer un formulaire avec la cmd symfony :
+    ``` shell 
+    symfony console make:form
+    
+    The name of the form class (e.g. TinyGnomeType):
+    > Register
+    
+    The name of Entity or fully qualified model class name that the new form will be bound to (empty for none):
+    > User
+    
+     Success! 
+    ```
+- Grace à l'entité User, Symfony me créer ``` src > Form RegisterType.php``` comportant une fonction Build : 
 
-### 2.3 : Création d'un formulaire de connection
+    ``` shell
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('email') // input
+            // ->add('roles')
+            ->add('password') // input
+        ;
+    }
+     ```
+- Dans le fichier ```RegisterController.php``` 
+  - Je crééer mon objet ```User()``` dans une variable ```$user```. Ne pas oublier d'importer  ```use App\Entity\User;```
+      ``` shell
+      $user = new User();
+      ```
+  - J'intencie (je créer) mon formulaire dans une variable ```$form``` en y plaçant en paramètre la classe ```RegisterType``` du fichier ```RegisterType.php``` Ainsi que l'objet ```User()``` que nous avons placé dans la variable ```$user```.
+    ``` shell
+    $form = $this->createForm(RegisterType::class, $user);
+    ```
+  - La classe doit retourner dans la vue, le formulaire placé en variable pour le template via un tableau associatif dans le return en 2em parametre :
+      en clé je le nome ```'formulaire'``` => ```$form``` car le form est créé sur la ligne précédant maintenant je veux créer la vue de ce formulaire. J'utilise la methode ```createView()```.
+    ``` shell
+    'formulaire' => $form->createView()
+    ```
+    Ce qui donne :
+    ``` shell
+    public function index(): Response
+    {
+      $user = new User();
+      $form = $this->createForm(RegisterType::class, $user);
+  
+          return $this->render('register/index.html.twig', [
+              'formulaire' => $form->createView()
+          ]);
+    }
+    ```
+    - Pour finir, dans la vue, ``` register > index.html.twig ``` je demande à symfony de créer le fomulaire à partire du rendu du controller ```RegisterController.php```:
+    ``` shell
+      {{ form(formulaire) }}
+    ```
+    Ce formulaire est créé par ```RegisterType.php``` au besoin de modifications des champs on le gère dans ce fichier. 
+  - Pour styliser le formulaire, se rendre sur la doc de symfony : https://symfony.com/doc/current/form/bootstrap4.html
+    - Twig propose de prendre en charge dans on fichier yml le style booststrap.
+    - Dans ``` config/packages/twig.yaml``` Ajouter la ligne : ```form_themes: ['bootstrap_4_layout.html.twig']``` pour affecter le style bootstrap au form. conformément à la doc.
+  
+### 2.3 : Création d'un formulaire de connection.
 
 ### 2.5 : Création d'un espace privé membre. 
