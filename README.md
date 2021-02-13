@@ -78,12 +78,12 @@ created: src/Repository/UserRepository.php
 updated: src/Entity/User.php
 updated: config/packages/security.yaml
 ``` 
-####En détail : 
+#### En détail : 
 - ``` src/Entity/User.php ``` Contient une classe User (qui implémente le schéma Userinterface) avec divers fonctions ayant pour but de get/set diverses données. On utilisera l'ORM doctrine pour intéragir avec la base de donnée.
 - ``` src/Repository/UserRepository.php ``` Contient tout ce qui touche à la récupération des données de l'entité user(). 
 - ``` config/packages/security.yaml ``` Contient entités ainsi que leurs règles. User, Admin, Public...
 
-####Création de la BDD
+#### Création de la BDD
 - S'assurer que le sever MySQL est en fonctionnement dans la version 5.7 minimum
 - S'assurer que ``` extension=pdo_mysql ``` dans le fichier php.ini de la version référant de nos variables d'environement system + de notre WAMP soit bien décommenté.
 - Se rendre dans le fichier ``` .env ``` et modifier les deux dernières lignes. 
@@ -92,7 +92,7 @@ updated: config/packages/security.yaml
     DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
   ```
   * ``` DATABASE_URL ="mysql:// ```  l'ID du user ``` : ``` mot de passe  ``` @ip du server: ``` port (vérifier sur phpMyadmin) ``` / ``` nom du server ``` ? ``` version du server.
-  * #####On commente la ligne suivante
+  * ##### On commente la ligne suivante
   ```shell 
     DATABASE_URL="mysql://root:@127.0.0.1:3306/ecommerce?serverVersion=5.7"
     #DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
@@ -108,7 +108,7 @@ updated: config/packages/security.yaml
     - ERROR
     - On sélectionne la TimeZone on apply et OK.
   
-###Création de la table User
+### Création de la table User
   - Nous allons utiliser doctrine pour faire une migration. Une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
   ``` shell 
   symfony console make:migration
