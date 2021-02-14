@@ -194,7 +194,56 @@ updated: config/packages/security.yaml
   - Pour styliser le formulaire, se rendre sur la doc de symfony : https://symfony.com/doc/current/form/bootstrap4.html
     - Twig propose de prendre en charge dans on fichier yml le style booststrap.
     - Dans ``` config/packages/twig.yaml``` Ajouter la ligne : ```form_themes: ['bootstrap_4_layout.html.twig']``` pour affecter le style bootstrap au form. conformément à la doc.
+   - #### Nous allons ajouter des champs à notre formulaire. Nous devons modifier L'entité User :
+    ``` shell
+    symfony console make:entity
+    ```
   
+      - Le terminal demande alors le nom de l'edntité, on renseigne : ```User```
+      - Il dit que cette entité existe déjà alors Ajoutons de nouveaux champs.
+      - On donne le nom du champs.
+      - On donne le type du champs qui nous retourne su c'est un Varchar ```(String) 255 caracteres```
+      - On choisit si ce champs peut etre ```null``` en BDD. Non
+      - Veut on créer un nouveau ```user``` ? oui
+        - on recommence la procédure pour ```Lastname```
+      ##### Ce qui donne sur le terminal : 
+      ```shell
+          C:\wamp64\www\site-ecommerce (master -> origin) 
+          λ symfony console make:entity
+          
+          Class name of the entity to create or update (e.g. BraveElephant):
+          > User
+          User
+          Your entity already exists! So let's add some new fields!
+          New property name (press <return> to stop adding fields):
+          > firstname
+          Field type (enter ? to see all types) [string]:
+          >
+          Field length [255]:
+          >
+          Can this field be null in the database (nullable) (yes/no) [no]:
+          > no
+          updated: src/Entity/User.php
+          Add another property? Enter the property name (or press <return> to stop adding fields):
+          > lastname
+          Field type (enter ? to see all types) [string]:
+          >
+          Field length [255]:
+          >
+          Can this field be null in the database (nullable) (yes/no) [no]:
+          > no
+          updated: src/Entity/User.php
+          Add another property? Enter the property name (or press <return> to stop adding fields):
+          >
+          Success!
+          Next: When you're ready, create a migration with php bin/console make:migration
+          >
+          C:\wamp64\www\site-ecommerce (master -> origin)
+          λ
+
+    ```
+      
+
 ### 2.3 : Création d'un formulaire de connection.
 
 ### 2.5 : Création d'un espace privé membre. 
