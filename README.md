@@ -89,13 +89,13 @@ created: src/Repository/UserRepository.php
 updated: src/Entity/User.php
 updated: config/packages/security.yaml
 ``` 
-####En détail : 
+#### En détail : 
 1. ``` src/Entity/User.php ``` Contient une classe User (qui implémente le schéma Userinterface) avec divers fonctions ayant pour but de get/set diverses données. On utilisera l'ORM doctrine pour intéragir avec la base de donnée.
 2. ``` src/Repository/UserRepository.php ``` Contient tout ce qui touche à la récupération des données de l'entité user(). 
 3. ``` config/packages/security.yaml ``` Contient entités ainsi que leurs règles. User, Admin, Public...
 
 
-###2.2 Configuration de la futur BDD
+### 2.2 Configuration de la futur BDD
 
 Pour que ça marche, j'ai besoin de créer la BDD de ce projet contenant mes tables. 
 
@@ -113,7 +113,7 @@ Pour que ça marche, j'ai besoin de créer la BDD de ce projet contenant mes tab
     #DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
   ```
 
-###2.3 Création de la BDD
+### 2.3 Création de la BDD
 - Pour créer la BDD on utilise la commande 
     ``` shell 
     symfony console doctrine:database:create
@@ -128,8 +128,10 @@ ___________________
     - On sélectionne la TimeZone on apply et OK.
   
 ___________________
-###2.4 Création de la table User
-  - Nous allons utiliser doctrine pour faire une migration. Une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
+### 2.4 Création de la table User à partire de l'entité User avec doctrine.
+Nous allons utiliser doctrine pour faire une migration. Le but est de demander une requete SQL ```CREAT TABLE user ...``` 
+    
+Simplement, une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
   ``` shell 
   symfony console make:migration
   ``` 
