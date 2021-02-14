@@ -38,8 +38,10 @@ https://getcomposer.org/download/
       <script src="{{ asset('assets/js/bootstrap.bundle.js') }}"></script> 
       ```
 
-***
 
+
+_____________
+_____________
 
 ## 1 : la home page
 - J'ai conçu un controler et un template pour la home nommé home via la commande :
@@ -62,16 +64,25 @@ https://getcomposer.org/download/
   ``` 
     Le contenu sera placé sur la home page dans la balise du même  nom grace à l'extends.
 
+___________________
+___________________
 
-## 2 : Les membres
+## 2 : Les membres (BDD, tables)
 
 ### 2.1 : Création de l'entité User()
-Je veux créer une entité User pour schématiser sa table User qui sera en base de donnée qui permettras de stocker les informations de l'utilisateur.
+_______________________
+Je veux créer une entité User pour schématiser sa table User dans la BDD.
 https://symfony.com/doc/current/security.html#a-create-your-user-class
-  ``` shell 
+
+Cette entité me permet d'être la base sur laquel ```Registretype``` va s'appuiller pour vérifier si les éléments existent en base. 
+
+Le fichier ```RegistreController.php``` aussi en a besoin pour créer le formulaire et l'injécter dans la vue.
+_________________________
+Donc, je créer l'entité User : 
+``` shell 
   symfony console make:user
   ``` 
-Ce qui va nous créer : 
+Ce qui va nous créer 3 fichiers : 
 ``` shell 
 created: src/Entity/User.php 
 created: src/Repository/UserRepository.php
@@ -79,11 +90,15 @@ updated: src/Entity/User.php
 updated: config/packages/security.yaml
 ``` 
 ####En détail : 
-- ``` src/Entity/User.php ``` Contient une classe User (qui implémente le schéma Userinterface) avec divers fonctions ayant pour but de get/set diverses données. On utilisera l'ORM doctrine pour intéragir avec la base de donnée.
-- ``` src/Repository/UserRepository.php ``` Contient tout ce qui touche à la récupération des données de l'entité user(). 
-- ``` config/packages/security.yaml ``` Contient entités ainsi que leurs règles. User, Admin, Public...
+1. ``` src/Entity/User.php ``` Contient une classe User (qui implémente le schéma Userinterface) avec divers fonctions ayant pour but de get/set diverses données. On utilisera l'ORM doctrine pour intéragir avec la base de donnée.
+2. ``` src/Repository/UserRepository.php ``` Contient tout ce qui touche à la récupération des données de l'entité user(). 
+3. ``` config/packages/security.yaml ``` Contient entités ainsi que leurs règles. User, Admin, Public...
 
-####Création de la BDD
+
+###2.2 Configuration de la futur BDD
+
+Pour que ça marche, j'ai besoin de créer la BDD de ce projet contenant mes tables. 
+
 - S'assurer que le sever MySQL est en fonctionnement dans la version 5.7 minimum
 - S'assurer que ``` extension=pdo_mysql ``` dans le fichier php.ini de la version référant de nos variables d'environement system + de notre WAMP soit bien décommenté.
 - Se rendre dans le fichier ``` .env ``` et modifier les deux dernières lignes. 
@@ -97,10 +112,14 @@ updated: config/packages/security.yaml
     DATABASE_URL="mysql://root:@127.0.0.1:3306/ecommerce?serverVersion=5.7"
     #DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
   ```
+
+###2.3 Création de la BDD
 - Pour créer la BDD on utilise la commande 
     ``` shell 
     symfony console doctrine:database:create
-    ``` 
+    ```
+  
+___________________
 - Dans PHPStorm nous avons accès à une vue BDD On s'affranchis ainsi de MySQL Workbench ou de PHPMyAdmin
     - dans l'onglet database à droite on clique sur +
     - Data source > MySQL
@@ -108,7 +127,8 @@ updated: config/packages/security.yaml
     - ERROR
     - On sélectionne la TimeZone on apply et OK.
   
-###Création de la table User
+___________________
+###2.4 Création de la table User
   - Nous allons utiliser doctrine pour faire une migration. Une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
   ``` shell 
   symfony console make:migration
@@ -119,12 +139,21 @@ updated: config/packages/security.yaml
   ``` 
   - La table User est crééer avec la structure attendu dans l'entité User.php. C'est à dire ;  id, email, role, password 
 
-### 2.2 : Création d'un formulaire d'inscription
+## 3 : Création d'un formulaire d'inscription
+#### Création de la vue du formulaire d'inscription
   - je commence par créer le contoller nommé ```RegisterController```
-  ``` shell 
-   symfony console make:controller
-  ``` 
-  - Je renome sa route pour ``` @Route("/inscription", name="register") ```
+    ``` shell 
+     symfony console make:controller
+    ```
+_____________________________
+  Ce fichier va m'indiquer la route de la page inscription. Mais aussi me stocker dans une variable :
+  
+- $user l'objet de l'entité User()
+- $form la création du formulaire à partir de ``RegisterType`` qui comportera les rélléments attendu du formulaire.
+- Ce fichier nous retourne donc le contenu de la page ``register/index.html.twig``
+- Je renome sa route pour ``` @Route("/inscription", name="register") ```
+_____________________________
+#### Zute, le formulaire est mal placé dans la vue. Il est collé au Carousel. Mettons un espace superieur sur le conteneur dessous SI le carousel est présents ur la page.
   - Dans le fichier ``` template > register > index.html.twig  ``` je créer mon block content. Avec mon contenu HTML dedans. 
   - Dans le fichier ``` base.html.twig```  je place le carousel sous une confition ``` if``` ainsi le carousel sera affiché uniquement si un ``` {% block carousel %}```  est définie dans la vue.
     ``` shell 
@@ -136,7 +165,11 @@ updated: config/packages/security.yaml
     ``` shell 
       <div class="container marketing {% if block('carousel') is not defined %}mt-5{% endif %}">
     ``` 
-  - Dans le fichier  ``` template > register > index.html.twig  ``` je créer un formulaire avec la cmd symfony :
+#### Voilà le Carousel dispose bien d'un espace en dessous.
+_____________________________
+#### Création des champs du formulaire à partir de l'entité user et l'injection dans la vue : 
+
+  - Dans le fichier  ``` template > register > index.html.twig  ``` je créer un formulaire avec la cmd symfony Qui utilisera les données de l'entité User :
     ``` shell 
     symfony console make:form
     
@@ -148,7 +181,7 @@ updated: config/packages/security.yaml
     
      Success! 
     ```
-- Grace à l'entité User, Symfony me créer ``` src > Form RegisterType.php``` comportant une fonction Build : 
+  - Grace à l'entité User, Symfony me créer ``` src > Form RegisterType.php``` comportant une fonction Build : 
 
     ``` shell
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -160,7 +193,7 @@ updated: config/packages/security.yaml
         ;
     }
      ```
-- Dans le fichier ```RegisterController.php``` 
+  - Dans le fichier ```RegisterController.php``` 
   - Je crééer mon objet ```User()``` dans une variable ```$user```. Ne pas oublier d'importer  ```use App\Entity\User;```
       ``` shell
       $user = new User();
@@ -174,7 +207,7 @@ updated: config/packages/security.yaml
     ``` shell
     'formulaire' => $form->createView()
     ```
-    Ce qui donne :
+    Ce qui donne en tout :
     ``` shell
     public function index(): Response
     {
@@ -190,60 +223,127 @@ updated: config/packages/security.yaml
     ``` shell
       {{ form(formulaire) }}
     ```
-    Ce formulaire est créé par ```RegisterType.php``` au besoin de modifications des champs on le gère dans ce fichier. 
-  - Pour styliser le formulaire, se rendre sur la doc de symfony : https://symfony.com/doc/current/form/bootstrap4.html
-    - Twig propose de prendre en charge dans on fichier yml le style booststrap.
-    - Dans ``` config/packages/twig.yaml``` Ajouter la ligne : ```form_themes: ['bootstrap_4_layout.html.twig']``` pour affecter le style bootstrap au form. conformément à la doc.
-   - #### Nous allons ajouter des champs à notre formulaire. Nous devons modifier L'entité User :
+    Ce formulaire est créé par ```RegisterType.php``` au besoin de modifications des champs on le gère dans ce fichier.
+
+________
+Pour styliser le formulaire, se rendre sur la doc de symfony : https://symfony.com/doc/current/form/bootstrap4.html
+- Twig propose de prendre en charge dans on fichier yml le style booststrap.
+- Dans ``` config/packages/twig.yaml``` Ajouter la ligne : ```form_themes: ['bootstrap_4_layout.html.twig']``` pour affecter le style bootstrap au form. conformément à la doc.
+________
+####Ajouter des champs à notre formulaire. Nous devons modifier L'entité User :
     ``` shell
     symfony console make:entity
     ```
-  
-      - Le terminal demande alors le nom de l'edntité, on renseigne : ```User```
-      - Il dit que cette entité existe déjà alors Ajoutons de nouveaux champs.
-      - On donne le nom du champs.
-      - On donne le type du champs qui nous retourne su c'est un Varchar ```(String) 255 caracteres```
-      - On choisit si ce champs peut etre ```null``` en BDD. Non
-      - Veut on créer un nouveau ```user``` ? oui
-        - on recommence la procédure pour ```Lastname```
-      ##### Ce qui donne sur le terminal : 
-      ```shell
-          C:\wamp64\www\site-ecommerce (master -> origin) 
-          λ symfony console make:entity
-          
-          Class name of the entity to create or update (e.g. BraveElephant):
-          > User
-          User
-          Your entity already exists! So let's add some new fields!
-          New property name (press <return> to stop adding fields):
-          > firstname
-          Field type (enter ? to see all types) [string]:
-          >
-          Field length [255]:
-          >
-          Can this field be null in the database (nullable) (yes/no) [no]:
-          > no
-          updated: src/Entity/User.php
-          Add another property? Enter the property name (or press <return> to stop adding fields):
-          > lastname
-          Field type (enter ? to see all types) [string]:
-          >
-          Field length [255]:
-          >
-          Can this field be null in the database (nullable) (yes/no) [no]:
-          > no
-          updated: src/Entity/User.php
-          Add another property? Enter the property name (or press <return> to stop adding fields):
-          >
-          Success!
-          Next: When you're ready, create a migration with php bin/console make:migration
-          >
-          C:\wamp64\www\site-ecommerce (master -> origin)
-          λ
+  - Le terminal demande alors le nom de l'edntité, on renseigne : ```User```
+  - Il dit que cette entité existe déjà alors Ajoutons de nouveaux champs.
+  - On donne le nom du champs.
+  - On donne le type du champs qui nous retourne su c'est un Varchar ```(String) 255 caracteres```
+  - On choisit si ce champs peut etre ```null``` en BDD. Non
+  - Veut on créer un nouveau ```user``` ? oui
+    - on recommence la procédure pour ```Lastname```
+    ##### Ce qui donne sur le terminal : 
+    ```shell
+      C:\wamp64\www\site-ecommerce (master -> origin) 
+      λ symfony console make:entity
+      
+      Class name of the entity to create or update (e.g. BraveElephant):
+      > User
+      User
+      Your entity already exists! So let's add some new fields!
+      New property name (press <return> to stop adding fields):
+      > firstname
+      Field type (enter ? to see all types) [string]:
+      >
+      Field length [255]:
+      >
+      Can this field be null in the database (nullable) (yes/no) [no]:
+      > no
+      updated: src/Entity/User.php
+      Add another property? Enter the property name (or press <return> to stop adding fields):
+      > lastname
+      Field type (enter ? to see all types) [string]:
+      >
+      Field length [255]:
+      >
+      Can this field be null in the database (nullable) (yes/no) [no]:
+      > no
+      updated: src/Entity/User.php
+      Add another property? Enter the property name (or press <return> to stop adding fields):
+      >
+      Success!
+      Next: When you're ready, create a migration with php bin/console make:migration
+      >
+      C:\wamp64\www\site-ecommerce (master -> origin)
+      λ
 
     ```
-      
+  - On va donc pouvoir créer une migration pour ALTER TABLE la table USER déjà existante et y appliquer nos nouveaux champs de données : 
+    ``` shell
+    Next: When you're ready, create a migration with php bin/console make:migration
+    
+    C:\wamp64\www\site-ecommerce (master -> origin)
+    λ symfony console make:migration
+    
+    Success!
+    
+    Next: Review the new migration "migrations/Version20210214142612.php"
+    Then: Run the migration with php bin/console doctrine:migrations:migrate
+    See https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html
+    
+    C:\wamp64\www\site-ecommerce (master -> origin)
+    λ
+    ```
+  - Et pour finir on execute la migration avec doctrine. ```λ symfony console doctrine:migrations:migrate ``` ça nous éxécuter une SQL querrie.
+##### C'est bon. On a ajouté dans notre BDD dans le tableau USER les champs : Firestname et Lastname.
+  
+#### Ajouter cette modification dans la vue : 
+  - on retourne dans ```RegisterType.php``` Le fichier qui génère mon formulaire et on créer notre formulaire avec ses attributs ça donne ça : 
+``` shell
+  public function buildForm(FormBuilderInterface $builder, array $options)
+  {
+  $builder
+  
+      ->add('firstname', TextType::class, [
+          'label' => 'Votre nom',
+          'attr' => [
+          'placeholder' => 'Veuillez saisir votre nom'
+        ]
+      ])// fin input
+  
+      ->add('lastname', TextType::class, [
+          'label' => 'Votre prénom',
+          'attr' => [
+              'placeholder' => 'Veuillez saisir votre prénom'
+          ]
+      ])// fin input
+  
+      ->add('email', EmailType::class, [
+          'label' => 'Votre email',
+          'attr' => [
+              'placeholder' => 'exemple@mail.com'
+          ]
+      ]) // fin input
+  
+      ->add('password', PasswordType::class, [
+      'label' => 'Votre mort de passe',
+          'attr' => [
+              'placeholder' => 'Saisissez  votre mot de passe'
+          ]
+      ]) // fin input
+  
+      ->add('password_confirm', PasswordType::class, [
+          'label' => 'Confirmez votre mot de passe',
+          'mapped' => false, // on dit à symfony de ne pas lier à l'entité ce champs "password_confirm" dans l'entité User.
+          'attr' => [
+              'placeholder' => 'Confirmez votre mot de passe'
+          ]
+      ]) // fin input
+  
+      ->add('submit', SubmitType::class,[
+          'label' =>"S'inscrire"
+      ])
+    ;
+   }
+ ```
 
-### 2.3 : Création d'un formulaire de connection.
-
-### 2.5 : Création d'un espace privé membre. 
+### 3.1 : Sauvegarde des entrés du formulaire en BDD
