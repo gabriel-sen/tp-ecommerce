@@ -131,7 +131,7 @@ ___________________
 ### 2.4 Création de la table User à partire de l'entité User avec doctrine.
 Nous allons utiliser doctrine pour faire une migration. Le but est de demander une requete SQL ```CREAT TABLE user ...``` 
     
-Simplement, une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. 
+Simplement, une migration c'est un fichier php qui contient les requettes SQL à éxécuter à partir des entités et les shémas qui y sont listés. Il permet d'appliquer des changements dans la BDD sans risque de tout casser. a noter que la deuxieme partie du fichier d'une migration contient la requette SQL pour annuler cette migration. 
   ``` shell 
   symfony console make:migration
   ``` 
@@ -232,7 +232,7 @@ Pour styliser le formulaire, se rendre sur la doc de symfony : https://symfony.c
 - Twig propose de prendre en charge dans on fichier yml le style booststrap.
 - Dans ``` config/packages/twig.yaml``` Ajouter la ligne : ```form_themes: ['bootstrap_4_layout.html.twig']``` pour affecter le style bootstrap au form. conformément à la doc.
 ________
-####Ajouter des champs à notre formulaire. Nous devons modifier L'entité User :
+#### Ajouter des champs à notre formulaire. Nous devons modifier L'entité User :
     ``` shell
     symfony console make:entity
     ```
