@@ -349,4 +349,54 @@ ________
  ```
 
 ### 3.1 : Sauvegarde des entrés du formulaire en BDD
+J'ai donc un formulaire de création de compte en vue et une table user en BDD.
+Pour l'instant à la validation du formulaire, rien ne s'écrit dans le tableau User.
+Voici comment je vais procéder : 
+1. Dès que le formulaire est soumis
+2. Je veux que tu traites l'information saisie
+3. Regarde si le formulaire est valide 
+4. Enregistre dans mon tableau user() les donnés entré par l'utilisateur.
 
+Dans le fichier  ``` RegisterController.php  ``` nous allons écrire celà dans la fonction index.
+1. On dois faire une injection de dépendance pour dire à symfony de rentrer dans la fonction en écoutant la requette HTTP qu'on place dan sune variable ```$request```
+Ce qui donne ``public function index(Request $request): Response`` On utilisera .
+   
+2. On demand à la fonction d'écouter la requette (à la recherche d'un post) ```$form->handleRequest($request);``` on utiliseras```use Symfony\Component\HttpFoundation\Request;```.
+A ce niveau mon formulaire est écouté.
+   
+3. On dois vérifié si le formulaire est soumis ET sile formulaire est valide par rapport a l'objet dans le fichier entité user, user()
+   ```if($form->isSubmitted() && $form->isValid()){ } ```
+   
+   3.1 dans une variable $user,  on va demander à symfony d'injécter dans mon objet User(), toute les donnés reçu de la requette.
+   ```$user = $form->getdata();```
+   
+   3.2 Puis on va les tester
+   ```dd($user);```
+    #### Ca donne ça : 
+    ``` shell
+    public function index(Request $request): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegisterType::class, $user);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $form->getdata();
+
+            //pour tester
+            dd($user);
+        }
+
+        return $this->render('register/index.html.twig', [
+            'formulaire' => $form->createView()
+        ]);
+    }
+    ```
+    
+    Bon, c'est cool. Sauf qu'on veux envoyer nos donnés dans notre table User() en base de donnée. 
+    Et bien je vais utiliser mon ORM Doctrine : 
+    A suivre. 
+   
+
+4. Enregistre dans mon tableau user() les donnés entré par l'utilisateur.
