@@ -233,9 +233,9 @@ Pour styliser le formulaire, se rendre sur la doc de symfony : https://symfony.c
 - Dans ``` config/packages/twig.yaml``` Ajouter la ligne : ```form_themes: ['bootstrap_4_layout.html.twig']``` pour affecter le style bootstrap au form. conformément à la doc.
 ________
 #### Ajouter des champs à notre formulaire. Nous devons modifier L'entité User :
-    ``` shell
+``` shell
     symfony console make:entity
-    ```
+```
   - Le terminal demande alors le nom de l'edntité, on renseigne : ```User```
   - Il dit que cette entité existe déjà alors Ajoutons de nouveaux champs.
   - On donne le nom du champs.
@@ -326,12 +326,14 @@ ________
           ]
       ]) // fin input
   
-      ->add('password', PasswordType::class, [
-      'label' => 'Votre mort de passe',
-          'attr' => [
-              'placeholder' => 'Saisissez  votre mot de passe'
-          ]
-      ]) // fin input
+    ->add('password', RepeatedType::class, [
+        'type' => PasswordType::class,
+        'required' => true,
+        'label' => 'Votre mort de passe',
+        'first_options' => ['label' => 'Mot de passe'],
+        'second_options' => ['label' => 'Confirmez votre mot de passe.'],
+        'invalid_message' => 'Le mot de passe et le mot de passe de confirmation doivent être identiques.'
+    ]) // fin input
   
       ->add('password_confirm', PasswordType::class, [
           'label' => 'Confirmez votre mot de passe',
@@ -347,6 +349,7 @@ ________
     ;
    }
  ```
+
 
 ### 3.1 : Sauvegarde des entrés du formulaire en BDD
 J'ai donc un formulaire de création de compte en vue et une table user en BDD.
@@ -367,32 +370,32 @@ A ce niveau mon formulaire est écouté.
 3. On dois vérifié si le formulaire est soumis ET sile formulaire est valide par rapport a l'objet dans le fichier entité user, user()
    ```if($form->isSubmitted() && $form->isValid()){ } ```
    
-   3.1 dans une variable $user,  on va demander à symfony d'injécter dans mon objet User(), toute les donnés reçu de la requette.
+   3.1 dans une variable $user,  on va demander à symfony d'injécter dans mon objet User(), toute les donnés reçu de la requette :
    ```$user = $form->getdata();```
    
-   3.2 Puis on va les tester
+   3.2 Puis on va les tester : 
    ```dd($user);```
     #### Ca donne ça : 
-    ``` shell
+``` shell
     public function index(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
-
+    
         $form->handleRequest($request);
-
+    
         if($form->isSubmitted() && $form->isValid()){
             $user = $form->getdata();
-
+    
             //pour tester
             dd($user);
         }
-
+    
         return $this->render('register/index.html.twig', [
             'formulaire' => $form->createView()
         ]);
     }
-    ```
+```
     
     Bon, c'est cool. Sauf qu'on veux envoyer nos donnés dans notre table User() en base de donnée. 
     Et bien je vais utiliser mon ORM Doctrine : 
@@ -400,3 +403,62 @@ A ce niveau mon formulaire est écouté.
    
 
 4. Enregistre dans mon tableau user() les donnés entré par l'utilisateur.
+   
+4.1. Il n'est pas impossible que mon controller ai à terme plusieurs fonctions. Je risque d'avoir besoin de Doctrine un peux partout. Je vais donc l'écrire dans mon contructeur et pas dans ma function.
+    Je dois initialiser une variable qui seras doctrine. La convention de Symfony m'oblige à l'appeler```private $entityManager; ``` Car c'est le manager de Doctrine qu'on utilise pour faire nos manipulations.
+
+4.2. Je créer ma fonction de sonctruction. J'y injecte le manager d'interface et qui prendras comme nom une variable.``` public function __construct(EntityManagerInterface $entityManager){```    
+     
+4.3. Dans ce manager d'entité (```private $entitymanager```), tu lui met dedans, l'entité manager que tu viens d'instancier et mis dans une variable lors de ton injection dans la fonction ```__construct```. ```$this->entityManager = $entityManager;```.
+
+Ce qui donne : 
+ ```shell
+    private $entityManager;
+        public function __construct(EntityManagerInterface $entityManager){
+        $this->entityManager = $entityManager;
+    }
+``` 
+
+4.4. J'appelle doctrine : ```$doctrine = $this->getDoctrine()->getManager();```
+    Je demande à Doctrine de me figer la data pour l'enregistrer. 
+``` shell
+    $this->entityManager->persist($user);
+```
+
+4.3. Tu execute l'objet que tu as figé et tu l'enregistre en base de donnée
+``` shell
+    $this->entityManager->flush()
+```
+Ce qui donne : 
+``` shell
+     &class RegisterController extends AbstractController
+    {
+    private $entityManager;
+    public function __construct(EntityManagerInterface $entityManager){
+    $this->entityManager = $entityManager;
+    }
+    /**
+    * @Route("/inscription", name="register")
+    */
+    public function index(Request $request): Response
+    {
+    $user = new User();
+    $form = $this->createForm(RegisterType::class, $user);
+    
+            $form->handleRequest($request);
+    
+            if($form->isSubmitted() && $form->isValid()){
+                $user = $form->getdata();
+    
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
+    
+            return $this->render('register/index.html.twig', [
+                'formulaire' => $form->createView()
+            ]);
+        }
+    }
+```
+
+Next stepp : Le Hashage des PSW
