@@ -461,4 +461,28 @@ Ce qui donne :
     }
 ```
 
-Next stepp : Le Hashage des PSW
+### 4 : Encodage des mot de passes. 
+
+Dans le fichier ```security.yaml``` nous avons en tête des lignes qui nous interessent :
+
+```shell
+    security:
+        encoders:
+            App\Entity\User:
+                algorithm: auto
+```
+Ca dit que dans l'entité User, oui, tu encode les mot de passes. 
+La ligne ```algorithm: auto```signifie que symfony doit utiliser la meilleur methode d'encodage possible. 
+
+Dans RegisterController.php on dois injécter la dépendance ``` UserPasswordEncoderInterface $encoder ``` pour qu'il utilise bien ce parametre. 
+On l'injecte dans la fonction qui permet d''écrire en base de donnée.'
+
+```  shell
+ public function index(Request $request, UserPasswordEncoderInterface $encoder): Response
+  ```
+
+Je vais tester si l'encodage fonctionne bien à la soumission de mon formulaire : 
+``` shell 
+            $password = $encoder->encodePassword($user, $user->getPassword());
+            dd($password);
+```
