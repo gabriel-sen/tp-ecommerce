@@ -483,6 +483,6 @@ On l'injecte dans la fonction qui permet d''écrire en base de donnée.'
 
 Je vais tester si l'encodage fonctionne bien à la soumission de mon formulaire : 
 ``` shell 
-            $password = $encoder->encodePassword($user, $user->getPassword());
-            dd($password);
+    $password = $encoder->encodePassword($user, $user->getPassword());
+    dd($password);
 ```

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f14e7fe-732e-49a0-8979-3c10e23d8ffc" name="Default Changelist" comment="PSW et PSW conf fonctionnent. Le registerController écrit bien en BDD.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/RegisterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RegisterController.php" afterDir="false" />
     </list>
@@ -158,6 +159,7 @@
       <workItem from="1613247974005" duration="3447000" />
       <workItem from="1613306472032" duration="20311000" />
       <workItem from="1613601217177" duration="1283000" />
+      <workItem from="1613661426365" duration="1960000" />
     </task>
     <task id="LOCAL-00001" summary="CREATION BDD : readme">
       <created>1613193797963</created>

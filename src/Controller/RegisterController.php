@@ -30,8 +30,10 @@ class RegisterController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $user = $form->getdata();
 
+            //cryptage du passworld
             $password = $encoder->encodePassword($user, $user->getPassword());
-            dd($password);
+            //envoie du Password dans la BDD
+            $user->setPassword($password);
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
