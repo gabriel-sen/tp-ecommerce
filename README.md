@@ -151,7 +151,7 @@ _____________________________
   Ce fichier va m'indiquer la route de la page inscription. Mais aussi me stocker dans une variable :
   
 - $user l'objet de l'entité User()
-- $form la création du formulaire à partir de ``RegisterType`` qui comportera les rélléments attendu du formulaire.
+- $form la création du formulaire à partir de ``RegisterType`` qui comportera les élléments attendu du formulaire.
 - Ce fichier nous retourne donc le contenu de la page ``register/index.html.twig``
 - Je renome sa route pour ``` @Route("/inscription", name="register") ```
 _____________________________
@@ -349,7 +349,15 @@ ________
     ;
    }
  ```
-
+### Les contraintes :
+https://symfony.com/doc/current/components/form.html#form-validation
+- On a ajouter une contraine par exemple une limite de caractère pour certains champs : 
+    - exemple le champs nom : 
+    ``` shell
+    'constrains' => new Length(2,30),  
+   ```
+  Un message d'erreur s'afficheras si on a min 2 ou max 30 caractères : 
+    - ERROR This value is too short. It should have 30 characters or more.
 
 ### 3.1 : Sauvegarde des entrés du formulaire en BDD
 J'ai donc un formulaire de création de compte en vue et une table user en BDD.
@@ -485,4 +493,12 @@ Je vais tester si l'encodage fonctionne bien à la soumission de mon formulaire 
 ``` shell 
     $password = $encoder->encodePassword($user, $user->getPassword());
     dd($password);
+```
+
+J'encode la données et je l'envoie dans la table. 
+
+``` shell 
+ $password = $encoder->encodePassword($user, $user->getPassword());
+ //envoie du Password dans la BDD
+ $user->setPassword($password);
 ```
