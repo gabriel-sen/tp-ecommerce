@@ -354,9 +354,9 @@ https://symfony.com/doc/current/components/form.html#form-validation
 - On a ajouter une contraine par exemple une limite de caractère pour certains champs : 
     - exemple le champs nom : 
     ``` shell
-    'constrains' => new Length(2,30),  
+    'constrains' => new Length(2,2),  
    ```
-  Un message d'erreur s'afficheras si on a min 2 ou max 30 caractères : 
+  Un message d'erreur s'afficheras si on a exactement 2 ou minimum 2 caractères : 
     - ERROR This value is too short. It should have 30 characters or more.
 
 ### 3.1 : Sauvegarde des entrés du formulaire en BDD

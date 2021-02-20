@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8f14e7fe-732e-49a0-8979-3c10e23d8ffc" name="Default Changelist" comment="le passworld encodé pars en Base de donnée">
+    <list default="true" id="8f14e7fe-732e-49a0-8979-3c10e23d8ffc" name="Default Changelist" comment="Ajout de contraintes sur les formulaires et mise à jour du README.&#10;Changement les langues des messages d'errers dans le translation.yml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Form/RegisterType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/RegisterType.php" afterDir="false" />
@@ -160,7 +160,7 @@
       <workItem from="1613306472032" duration="20311000" />
       <workItem from="1613601217177" duration="1283000" />
       <workItem from="1613661426365" duration="2217000" />
-      <workItem from="1613861153540" duration="805000" />
+      <workItem from="1613861153540" duration="1136000" />
     </task>
     <task id="LOCAL-00001" summary="CREATION BDD : readme">
       <created>1613193797963</created>
@@ -246,7 +246,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613688417146</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Ajout de contraintes sur les formulaires et mise à jour du README.&#10;Changement les langues des messages d'errers dans le translation.yml">
+      <created>1613862167462</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1613862167462</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,6 +282,8 @@
     <MESSAGE value="Documentation du readme sur la fonction que je teste pour traiter les données à envoyer en base." />
     <MESSAGE value="PSW et PSW conf fonctionnent. Le registerController écrit bien en BDD." />
     <MESSAGE value="le passworld encodé pars en Base de donnée" />
-    <option name="LAST_COMMIT_MESSAGE" value="le passworld encodé pars en Base de donnée" />
+    <MESSAGE value="Ajout de contraintes sur les formulaires et mise à jour du README" />
+    <MESSAGE value="Ajout de contraintes sur les formulaires et mise à jour du README.&#10;Changement les langues des messages d'errers dans le translation.yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de contraintes sur les formulaires et mise à jour du README.&#10;Changement les langues des messages d'errers dans le translation.yml" />
   </component>
 </project>
