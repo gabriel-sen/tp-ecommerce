@@ -433,11 +433,11 @@ Ce qui donne :
     $this->entityManager->persist($user);
 ```
 
-4.3. Tu execute l'objet que tu as figé et tu l'enregistre en base de donnée
+4.3. Tu execute l'objet que tu as figée et tu l'enregistre en base de donnée
 ``` shell
     $this->entityManager->flush()
 ```
-Ce qui donne : 
+Ce qui donne globalement : 
 ``` shell
      &class RegisterController extends AbstractController
     {
@@ -471,7 +471,7 @@ Ce qui donne :
 
 ### 4 : Encodage des mot de passes. 
 
-Dans le fichier ```security.yaml``` nous avons en tête des lignes qui nous interessent :
+Dans le fichier ```security.yaml``` nous avons en tête des lignes qui nous interesse :
 
 ```shell
     security:
